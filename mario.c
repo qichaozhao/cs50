@@ -51,10 +51,4 @@ void pyramid_right(int height, int row)
     {
         printf("#");
     }
-    
-    // Print spaces
-    for (int r = 1; r <= (height - row); r++)
-    {
-        printf(" ");
-    }
 }
