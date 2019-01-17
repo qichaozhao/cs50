@@ -35,17 +35,22 @@ int main(void)
 		int digitProduct = digitArray[i] * 2;
 
 		// Now make sure we just add the digits if the product is over 10
-		digitSum += digitProduct / 10 + digitProduct % 10;
+		// printf("%i: %i + %i\n", digitProduct, digitProduct / 10, digitProduct % 10);
+		digitSum += (digitProduct / 10 + digitProduct % 10);
 	}
 
+	// printf("interim digitSum: %i\n", digitSum);
+
 	// Loop through the non-product digits
-	for (int i = 0; i < card_len; i++)
+	for (int i = 0; i < card_len; i += 2)
 	{
 		digitSum += digitArray[i];
 	}
 
+	// printf("final digitSum: %i\n", digitSum);
+
 	// Check whether the last digit is a zero or not
-	if (digitSum % 10 == 0)
+	if (digitSum % 10 != 0)
 	{
 		printf("INVALID\n");
 		return 0;
@@ -60,10 +65,16 @@ int main(void)
 	{
 		printf("AMEX\n");
 	}
-	else
+	else if (digitArray[card_len - 1] == 5 && (digitArray[card_len - 2] >= 1 || digitArray[card_len - 2] <= 5))
 	{
 		printf("MASTERCARD\n");
 	}
+	else
+	{
+		printf("INVALID\n");
+	}
+
+	return 0;
 }
 
 void populateDigitArray(int *digitArray, long digits, int card_len)
@@ -76,4 +87,13 @@ void populateDigitArray(int *digitArray, long digits, int card_len)
 		digits /= 10;
 		idx++;
 	}
+
+	// 	Debug the array by printing it
+	// printf("digitArray:\n");
+	// for (int i = 0; i < card_len; i++)
+	// {
+	// 	printf("%i", digitArray[i]);
+	// }
+	//    printf("\n");
 }
+
