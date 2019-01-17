@@ -65,7 +65,7 @@ int main(void)
 	{
 		printf("AMEX\n");
 	}
-	else if (digitArray[card_len - 1] == 5 && (digitArray[card_len - 2] >= 1 || digitArray[card_len - 2] <= 5))
+	else if (digitArray[card_len - 1] == 5 && (digitArray[card_len - 2] >= 1 && digitArray[card_len - 2] <= 5))
 	{
 		printf("MASTERCARD\n");
 	}
