@@ -5,38 +5,46 @@
 #include <string.h>
 #include <ctype.h>
 
+// This function calculates the shift (from 1 to 26) for a letter.
+int shift(char c)
+{
+	if (c >= 'a' && c <= 'z')
+	{
+		return (int) c - 'a';
+	}
+	else if (c >= 'A' && c <= 'Z')
+	{
+		return (int) c - 'A';
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 int main(int argc, string argv[])
 {
 	// Input validation occcurs in the next few steps
 	// Checks for only one user argument
 	if (argc != 2)
 	{
-		printf("Usage: %s key\n", argv[0]);
+		printf("Usage: %s keyword\n", argv[0]);
 		return 1;
 	}
 
 	// Checks for numeric-ness of the user argument
-	bool is_numeric = 1;
 	for (int i = 0; i < strlen(argv[1]); i++)
 	{
-		if (isdigit(argv[1][i]) == 0)
+		if (isalpha(argv[1][i]) == 0)
 		{
-			is_numeric = 0;
+			printf("Usage: %s keyword\n", argv[0]);
+			return 1;
 		}
 	}
 
-	int key;
-	if (is_numeric == 0)
-	{
-		printf("Usage: %s key\n", argv[0]);
-		return 1;
-	}
-	else
-	{
-		sscanf(argv[1], "%i", &key);
-	}
-
+	//
 	// Now proceed with the rest of the program
+	//
 	string plaintext = "";
 	do
 	{
@@ -48,17 +56,22 @@ int main(int argc, string argv[])
 	// printf("argv[1]: %s\n", argv[1]);
 	// printf("key: %i\n", key);
 	printf("ciphertext: ");
+	int letter_pos = 0;
 	for (int i = 0; i < strlen(plaintext); i++)
 	{
 		char to_print;
+		int shift_idx = letter_pos % strlen(argv[1]);
+		int to_shift = shift(argv[1][shift_idx]);
 
 		if (plaintext[i] >= 'a' && plaintext[i] <= 'z')
 		{
-			to_print = 'a' + (plaintext[i] - 'a' + key) % 26;
+			to_print = 'a' + (plaintext[i] - 'a' + to_shift) % 26;
+			letter_pos++;
 		} 
 		else if (plaintext[i] >= 'A' && plaintext[i] <= 'Z')
 		{
-			to_print = 'A' + (plaintext[i] - 'A' + key) % 26;
+			to_print = 'A' + (plaintext[i] - 'A' + to_shift) % 26;
+			letter_pos++;
 		}
 		else
 		{
