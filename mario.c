@@ -6,20 +6,20 @@ void pyramid_right(int height, int row);
 
 int main(void)
 {
-	int h;
-	do
-	{
-		h = get_int("Height: ");
-	}
-	while (h < 1 || h > 8);
+    int h;
+    do
+    {
+        h = get_int("Height: ");
+    }
+    while (h < 1 || h > 8);
 
-	for (int r = 1; r <= h; r++)
+    for (int r = 1; r <= h; r++)
     {
         // Print left part
         pyramid_left(h, r);
-       	
-       	// Print two spaces
-       	printf("  ");
+        
+        // Print two spaces
+        printf("  ");
 
         // Print right part
         pyramid_right(h, r);
