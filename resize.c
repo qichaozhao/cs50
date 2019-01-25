@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
         fseek(inptr, in_padding, SEEK_CUR);
 
         // Now write to new file but with a factor of N
-        for (int i = 0; i < factor; i++)
+        for (int f = 0; f < factor; f++)
         {
             for (int j = 0; j < bi.biWidth; j++)
             {
