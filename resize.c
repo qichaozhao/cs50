@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
 #include "bmp.h"
 
 int max(int a, int b);
@@ -61,14 +60,32 @@ int main(int argc, char *argv[])
     BITMAPINFOHEADER nbi = bi;
 
     nbi.biWidth = max((int) bi.biWidth * factor, 1);
-    nbi.biHeight = bi.biHeight * factor;
+
+    // Since biHeight can be less than zero, we must clamp it properly.
+    nbi.biHeight = (int) bi.biHeight * factor;
+    if (nbi.biHeight == 0)
+    {
+        if (bi.biHeight < 0)
+        {
+            nbi.biHeight = -1;
+        }
+        else if (bi.biHeight > 0)
+        {
+            nbi.biHeight = 1;
+        }
+        else
+        {
+            printf("Original image biHeight == 0, unexpected height. Quitting...");
+            return 1;
+        }
+    }
 
     // determine padding for scanlines
     int in_padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
-    int out_padding = (4 - (bi.biWidth * factor * sizeof(RGBTRIPLE)) % 4) % 4;
+    int out_padding = (4 - (nbi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // Modify output file BITMAPFILEHEADER
-    nbi.biSizeImage = (bi.biWidth * factor * sizeof(RGBTRIPLE) + out_padding) * abs(bi.biHeight) * factor;
+    nbi.biSizeImage = (nbi.biWidth * sizeof(RGBTRIPLE) + out_padding) * abs(nbi.biHeight);
     nbf.bfSize = nbi.biSizeImage + 54;
 
     // write outfile's BITMAPFILEHEADER
@@ -83,31 +100,29 @@ int main(int argc, char *argv[])
         // Make an array of structs to hold the line
         RGBTRIPLE *line = malloc(sizeof(*line) * bi.biWidth);
 
-        // iterate over pixels in scanline
-        for (int j = 0; j < bi.biWidth; j++)
-        {
-            // read RGB triple from infile
-            fread(&line[j], sizeof(RGBTRIPLE), 1, inptr);
-        }
+        // read RGB triple from infile
+        fread(line, sizeof(RGBTRIPLE), bi.biWidth, inptr);
 
         // skip over padding, if any
         fseek(inptr, in_padding, SEEK_CUR);
 
-        // Now write to new file but with a factor of N
-        for (int i = 0; i < factor; i++)
+        // Now we calculate if we need to write any extra pixels or fewer pixels
+        for (int oi = 0, nbiHeight = abs(nbi.biHeight); oi < nbiHeight; oi++)
         {
-            for (int j = 0; j < bi.biWidth; j++)
+            if (i == (int) (oi / factor))
             {
-                for (int k = 0; k < factor; k++)
+                // Now write to new file but with the right number of repeats
+                for (int j = 0; j < nbi.biWidth; j++)
                 {
-                    fwrite(&line[j], sizeof(RGBTRIPLE), 1, outptr);
+                    // Now get the right idx from the array
+                    int col_idx = (int) (j / factor);
+                    fwrite(&line[col_idx], sizeof(RGBTRIPLE), 1, outptr);
                 }
-            }
 
-            // then add it back (to demonstrate how)
-            for (int k = 0; k < out_padding; k++)
-            {
-                fputc(0x00, outptr);
+                for (int k = 0; k < out_padding; k++)
+                {
+                    fputc(0x00, outptr);
+                }
             }
         }
 
