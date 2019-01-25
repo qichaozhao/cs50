@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     BITMAPFILEHEADER nbf = bf;
     BITMAPINFOHEADER nbi = bi;
 
-    nbi.biWidth = max((int) bi.biWidth * factor, 1);
+    nbi.biWidth = max((int)bi.biWidth * factor, 1);
 
     // Since biHeight can be less than zero, we must clamp it properly.
     nbi.biHeight = (int) bi.biHeight * factor;
@@ -109,13 +109,13 @@ int main(int argc, char *argv[])
         // Now we calculate if we need to write any extra pixels or fewer pixels
         for (int oi = 0, nbiHeight = abs(nbi.biHeight); oi < nbiHeight; oi++)
         {
-            if (i == (int) (oi / factor))
+            if (i == (int)(oi / factor))
             {
                 // Now write to new file but with the right number of repeats
                 for (int j = 0; j < nbi.biWidth; j++)
                 {
                     // Now get the right idx from the array
-                    int col_idx = (int) (j / factor);
+                    int col_idx = (int)(j / factor);
                     fwrite(&line[col_idx], sizeof(RGBTRIPLE), 1, outptr);
                 }
 
@@ -142,7 +142,12 @@ int main(int argc, char *argv[])
 int max(int a, int b)
 {
     if (a > b)
+    {
         return a;
+    }
     else
+    {
         return b;
+    }
 }
+
