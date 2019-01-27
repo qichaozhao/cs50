@@ -23,8 +23,7 @@ int main(int argc, char *argv[])
     }
 
     int blocksize = 512;
-    int blocks_read = 0;
-    int blocks_written = 0;
+    size_t blocks_read = 0;
 
     int jpeg_idx = 0;
     int write_flag = 0; 
@@ -62,7 +61,7 @@ int main(int argc, char *argv[])
             }
 
             // Write the block
-            blocks_written = fwrite(block, 1, blocks_read, outptr);
+            fwrite(block, 1, blocks_read, outptr);
             write_flag = 1;
         }
         // Otherwise we are either not in a jpeg and shouldn't write
@@ -71,7 +70,7 @@ int main(int argc, char *argv[])
         {
             if (write_flag == 1)
             {
-                blocks_written = fwrite(block, 1, blocks_read, outptr);
+                fwrite(block, 1, blocks_read, outptr);
             }
         }
 
