@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 FILE *get_output_file(int idx);
 
@@ -77,6 +78,9 @@ int main(int argc, char *argv[])
         free(block);
     }
     while (blocks_read == blocksize & jpeg_idx < 50);
+
+    fclose(inptr);
+    fclose(outptr);
 }
 
 FILE *get_output_file(int idx)
