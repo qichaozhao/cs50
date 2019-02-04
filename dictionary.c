@@ -116,8 +116,8 @@ bool check(const char *word)
     int idx = hash(word);
 
     // Now let's move everything to lower case
-    char lower_word[LENGTH + 1] = "";
-    for (int i = 0; i < LENGTH + 1; i++)
+    char lower_word[LENGTH + 1];
+    for (int i = 0; word[i]; i++)
     {
         lower_word[i] = tolower(word[i]);
     }
