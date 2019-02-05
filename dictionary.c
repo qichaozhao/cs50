@@ -1,44 +1,44 @@
 // Implements a dictionary's functionality
 
-#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 #include "dictionary.h"
 
+// Represents number of children for each node in a trie
+#define N 27
 
-// Represents number of buckets in a hash table
-#define N 26
-
-// Represents a node in a hash table (or linked list)
+// Represents a node in a trie
 typedef struct node
 {
-    char word[LENGTH + 1];
-    struct node *next;
+    bool is_word;
+    struct node *children[N];
 }
 node;
 
-// Function prototype for linked list node deletion
-void ll_delete(struct node *node_ptr);
+// Represents a trie
+node *root;
 
-// Represents a hash table
-node *hashtable[N];
-
-// Hashes word to a number between 0 and 25, inclusive, based on its first letter
-unsigned int hash(const char *word)
-{
-    return tolower(word[0]) - 'a';
-}
+int find_index(const char c);
+unsigned int size_rec(struct node *head);
+void unload_rec(struct node *head);
 
 // Loads dictionary into memory, returning true if successful else false
 bool load(const char *dictionary)
 {
-    // Initialize hash table
+    // Initialize trie
+    root = malloc(sizeof(node));
+    if (root == NULL)
+    {
+        return false;
+    }
+    root->is_word = false;
     for (int i = 0; i < N; i++)
     {
-        hashtable[i] = NULL;
+        root->children[i] = NULL;
     }
 
     // Open dictionary
@@ -52,32 +52,59 @@ bool load(const char *dictionary)
     // Buffer for a word
     char word[LENGTH + 1];
 
-    // Insert words into hash table
+    // Insert words into trie
     while (fscanf(file, "%s", word) != EOF)
     {
-        // First let's hash the word
-        int idx = hash(word);
 
-        // Now malloc the wordnode
-        node *wordnode = malloc(sizeof(node));
-        memcpy(wordnode->word, word, sizeof(word));
-        wordnode->next = NULL;
+        // Set the current head
+        node *head = root;
 
-        // Now check the contents at the location of the hashtable
-        // If null, then we create the first linked list and insert it
-        // Else a list already exists so we have to append to the existing linkedlist
-        if (hashtable[idx] == NULL)
+        // Get the index of the word
+        char *c = word;
+        while (*c != '\0')
         {
-            hashtable[idx] = wordnode;
-        }
-        else
-        {
-            // First set the new wordnode to point to the first node of the existing linked list
-            wordnode->next = hashtable[idx];
+            int idx = find_index(*c);
+            node *child = NULL;
 
-            // Now change the stored reference to point to the wordnode
-            hashtable[idx] = wordnode;
+            // Create new child node if one does not exist
+            // Otherwise use the existing one
+            if (head->children[idx] == NULL)
+            {
+                child = malloc(sizeof(node));
+                if (child == NULL)
+                {
+                    unload();
+                    return false;
+                }
+
+                // Set the parameters for the child node
+                child->is_word = false;
+                for (int i = 0; i < N; i++)
+                {
+                    child->children[i] = NULL;
+                }
+
+                // Now add the child to the trie
+                head->children[idx] = child;
+            }
+            else
+            {
+                child = head->children[idx];
+            }
+
+            // Now update the head variable to point to the child
+            // so we can keep growing the trie.
+            head = child;
+
+            // Increment the pointer
+            c++;
         }
+
+        // Now we've looped through the entire word, we should finish off
+        // with the word flag
+        head->is_word = true;
+
+
     }
 
     // Close dictionary
@@ -90,21 +117,25 @@ bool load(const char *dictionary)
 // Returns number of words in dictionary if loaded else 0 if not yet loaded
 unsigned int size(void)
 {
+    // Call our rescursive helper function
+    return size_rec(root);
+}
 
+unsigned int size_rec(struct node *head)
+{
+    // Loop through all the branches of the trie and count occurrences of is_word=true
     int count = 0;
+    if (head->is_word)
+    {
+        count++;
+    }
+
     for (int i = 0; i < N; i++)
     {
-        if (hashtable[i] != NULL)
+        if (head->children[i] != NULL)
         {
-            // Count the length of the linked list by traversing it
-            struct node *head = hashtable[i];
-            while (head != NULL)
-            {
-                head = head->next;
-                count++;
-            }
+            count += size_rec(head->children[i]);
         }
-
     }
     return count;
 }
@@ -112,56 +143,74 @@ unsigned int size(void)
 // Returns true if word is in dictionary else false
 bool check(const char *word)
 {
-    // Hash the word to find the index
-    int idx = hash(word);
-
-    // Now let's move everything to lower case
+    // Lowercase the word
     char lower_word[LENGTH + 1];
-    for (int i = 0, j = strlen(word) + 1; i < j; i++)
+    for (int i = 0; i < strlen(word) + 1; i++)
     {
         lower_word[i] = tolower(word[i]);
     }
 
-    // Now traverse the linked list to check if the word exists
-    if (hashtable[idx] != NULL)
+    // Traverse the trie using the lowercased word
+    char *c = lower_word;
+    node *head = root;
+    while (*c != '\0')
     {
-        struct node *head = hashtable[idx];
-        while (head != NULL)
+        // Get the index of the child to look at
+        // Then traverse to it by setting the head to there
+        int idx = find_index(*c);
+
+        if (head->children[idx] != NULL)
         {
-            if (strcmp(head->word, lower_word) == 0)
-            {
-                return true;
-            }
-            head = head->next;
+            head = head->children[idx];
         }
+        else
+        {
+            return false;
+        }
+
+        // Increment the pointer.
+        c++;
     }
+
+    // Now we should have traversed the trie to where the word should be
+    if (head->is_word == true)
+    {
+        return true;
+    }
+
     return false;
 }
 
 // Unloads dictionary from memory, returning true if successful else false
 bool unload(void)
 {
-    for (int i = 0; i < N; i++)
-    {
-        if (hashtable[i] != NULL)
-        {
-            ll_delete(hashtable[i]);
-            hashtable[i] = NULL;
-        }
-
-    }
+    // We need to recursively navigate down the trie and free all the alloc'd memory
+    unload_rec(root);
     return true;
 }
 
-// Recursively traverse the node and delete
-void ll_delete(struct node *head)
+void unload_rec(struct node *head)
 {
-    if (head == NULL)
+    // Loop through and free all the children, then free the head
+    for (int i = 0; i < N; i++)
     {
-        return;
+        if (head->children[i] != NULL)
+        {
+            unload_rec(head->children[i]);
+        }
     }
 
-    ll_delete(head->next);
     free(head);
 }
 
+int find_index(const char c)
+{
+    if (c == '\'')
+    {
+        return 26;
+    }
+    else
+    {
+        return tolower(c) - 'a';
+    }
+}
