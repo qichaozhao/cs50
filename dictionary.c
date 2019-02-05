@@ -117,7 +117,7 @@ bool check(const char *word)
 
     // Now let's move everything to lower case
     char lower_word[LENGTH + 1];
-    for (int i = 0; i < (LENGTH + 1); i++)
+    for (int i = 0, j = strlen(word); i < j; i++)
     {
         lower_word[i] = tolower(word[i]);
     }
