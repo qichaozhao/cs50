@@ -16,5 +16,12 @@ for i in range(1, h + 1):
     for j in range(i):
         print("#", end="")
 
+    # Now print the spaces separating left and right
+    print("  ", end="")
+
+    # Now print the blocks of the right half
+    for j in range(i):
+        print("#", end="")
+
     # Print a newline
     print()
