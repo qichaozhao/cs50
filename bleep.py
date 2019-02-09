@@ -10,7 +10,7 @@ def main():
     # Load the banned words into a set
     try:
         with open(argv[1], 'r') as f_in:
-            banned = set([l.rstrip("\n") for l in f_in.readlines()])
+            banned = set([l.rstrip("\n").lower() for l in f_in.readlines()])
 
     except FileNotFoundError:
         exit("Usage: python bleep.py banned_words.txt")
