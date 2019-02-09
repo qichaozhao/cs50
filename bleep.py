@@ -31,7 +31,7 @@ def main():
     for tkn in tkn_ipt:
 
         word = tkn
-        if tkn in banned:
+        if tkn.lower() in banned:
             word = "*" * len(tkn)
 
         out.append(word)
