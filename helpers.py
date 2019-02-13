@@ -12,8 +12,8 @@ def sentences(a, b):
 
     from nltk.tokenize import sent_tokenize
 
-    a_sents = sent_tokenize(a)
-    b_sents = sent_tokenize(b)
+    a_sents = set(sent_tokenize(a))
+    b_sents = set(sent_tokenize(b))
 
     return a_sents & b_sents
 
