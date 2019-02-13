@@ -19,7 +19,7 @@ def substrings(a, b, n):
     """Return substrings of length n in both a and b"""
 
     a_substr = set()
-    for i in range(0, len(a) - n):
+    for i in range(0, len(a) - n + 1):
         a_substr.add(a[i:i + n])
 
     return set([ss for ss in a_substr if ss in b])
