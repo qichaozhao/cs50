@@ -1,8 +1,10 @@
 def lines(a, b):
     """Return lines in both a and b"""
 
-    b_lines = b.split("\n")
-    return [l for l in a.split("\n") if l in b_lines]
+    a_lines = set(a.split("\n"))
+    b_lines = set(b.split("\n"))
+
+    return a_lines & b_lines
 
 
 def sentences(a, b):
@@ -10,16 +12,16 @@ def sentences(a, b):
 
     from nltk.tokenize import sent_tokenize
 
+    a_sents = sent_tokenize(a)
     b_sents = sent_tokenize(b)
 
-    return set([w for w in sent_tokenize(a) if w in b_sents])
+    return a_sents & b_sents
 
 
 def substrings(a, b, n):
     """Return substrings of length n in both a and b"""
 
-    a_substr = set()
-    for i in range(0, len(a) - n + 1):
-        a_substr.add(a[i:i + n])
+    a_substr = set([a[i:i + n] for i in range(0, len(a) - n + 1)])
+    b_substr = set([b[i:i + n] for i in range(0, len(b) - n + 1)])
 
-    return set([ss for ss in a_substr if ss in b])
+    return a_substr & b_substr
