@@ -136,9 +136,9 @@ def check():
     usrs = db.execute("SELECT * FROM users WHERE username = :uname", uname=uname)
 
     if len(uname) > 1 and len(usrs) == 0:
-        return jsonify({"status": "valid"})
+        return jsonify({"status": "valid"}), 200
     else:
-        return jsonify({"status": "invalid"})
+        return jsonify({"status": "invalid"}), 400
 
 
 @app.route("/history")
