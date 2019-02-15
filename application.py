@@ -46,8 +46,8 @@ def index():
 
     # Get the user and holding details
     usr = db.execute("SELECT * FROM users WHERE id = :uid", uid=session['user_id'])
-    holdings = db.execute("SELECT symbol, sum(quantity) as quantity FROM transactions WHERE user_id = :uid GROUP BY symbol HAVING sum(quantity) > 0",
-        uid=session['user_id'])
+    holdings = db.execute("""SELECT symbol, sum(quantity) as quantity
+        FROM transactions WHERE user_id = :uid GROUP BY symbol HAVING sum(quantity) > 0""", uid=session['user_id'])
 
     # Loop through the list and for each symbol dict append the price returned through lookup
     for h in holdings:
@@ -65,8 +65,7 @@ def deposit():
     """Deposit more cash"""
 
     dep = float(request.form.get("cash", "0"))
-    db.execute("UPDATE users SET cash = cash + :dep WHERE id = :uid",
-        dep=dep, uid=session['user_id'])
+    db.execute("UPDATE users SET cash = cash + :dep WHERE id = :uid", dep=dep, uid=session['user_id'])
 
     return redirect('/')
 
@@ -82,8 +81,7 @@ def withdraw():
     if usr[0]['cash'] < withdraw:
         return apology("Cannot withdraw more than you have in the account")
 
-    db.execute("UPDATE users set cash = cash - :withdraw WHERE id = :uid",
-        withdraw=withdraw, uid=session['user_id'])
+    db.execute("UPDATE users set cash = cash - :withdraw WHERE id = :uid", withdraw=withdraw, uid=session['user_id'])
 
     return redirect('/')
 
@@ -122,8 +120,8 @@ def buy():
             return apology("You do not have that much money available in your account.")
 
         # Make the transaction into the database
-        db.execute("INSERT INTO transactions ('user_id', 'symbol', 'price', 'quantity') VALUES (:uid, :symbol, :price, :qty)",
-            uid=session['user_id'], symbol=symbol, price=q['price'], qty=shares)
+        db.execute("""INSERT INTO transactions ('user_id', 'symbol', 'price', 'quantity')
+            VALUES (:uid, :symbol, :price, :qty)""", uid=session['user_id'], symbol=symbol, price=q['price'], qty=shares)
 
         # Update the users cash balance
         new_balance = cash - q['price'] * shares
@@ -255,7 +253,8 @@ def register():
             return apology("Your username already exists, please choose a different username")
 
         # All validation checks passed so we can insert the new user
-        db.execute("INSERT INTO users ('username', 'hash') VALUES (:uname, :pwd_hash)", uname=uname, pwd_hash=generate_password_hash(pwd))
+        db.execute("""INSERT INTO users ('username', 'hash')
+            VALUES (:uname, :pwd_hash)""", uname=uname, pwd_hash=generate_password_hash(pwd))
         return redirect('/', 302)
 
 
@@ -264,8 +263,9 @@ def register():
 def sell():
     """Sell shares of stock"""
 
-    holdings = db.execute("SELECT symbol, sum(quantity) as quantity FROM transactions WHERE user_id = :uid GROUP BY symbol HAVING sum(quantity) > 0",
-        uid=session['user_id'])
+    holdings = db.execute("""SELECT symbol, sum(quantity) as quantity
+        FROM transactions WHERE user_id = :uid
+        GROUP BY symbol HAVING sum(quantity) > 0""", uid=session['user_id'])
 
     if request.method == "GET":
         return render_template("sell.html", holdings=holdings)
@@ -295,8 +295,8 @@ def sell():
             return apology(f"You do not have that many shares of {symbol} to sell.")
 
         # Make the transaction into the database
-        db.execute("INSERT INTO transactions ('user_id', 'symbol', 'price', 'quantity') VALUES (:uid, :symbol, :price, :qty)", 
-            uid=session['user_id'], symbol=symbol, price=q['price'], qty=-shares)
+        db.execute("""INSERT INTO transactions ('user_id', 'symbol', 'price', 'quantity')
+            VALUES (:uid, :symbol, :price, :qty)""", uid=session['user_id'], symbol=symbol, price=q['price'], qty=-shares)
 
         # Update the users cash balance
         acct = db.execute("SELECT cash FROM users where id = :uid", uid=session['user_id'])
