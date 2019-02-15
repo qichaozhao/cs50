@@ -22,8 +22,8 @@ History
             <td>{{ t['symbol'] }}</td>
             <td>{{ t['quantity'] }}</td>
             <td>{{ t['type'] }}</td>
-            <td>{{ t['price'] }}</td>
-            <td>{{ t['total'] }}</td>
+            <td>{{ t['price'] | usd }}</td>
+            <td>{{ t['total'] | usd }}</td>
             <td>{{ t['created_on'] }}</td>
         </tr>
         {% endfor %}

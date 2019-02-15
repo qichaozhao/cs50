@@ -21,12 +21,12 @@ Home
             <td>{{ h['symbol'] }}</td>
             <td>{{ h['name'] }}</td>
             <td>{{ h['quantity'] }}</td>
-            <td>{{ h['latest_price'] }}</td>
-            <td>{{ h['total'] }}</td>
+            <td>{{ h['latest_price'] | usd }}</td>
+            <td>{{ h['total'] | usd }}</td>
             <td>
                 <form class="form-inline">
                     <label class="sr-only" for="shares-{{ h['symbol'] }}">Shares</label>
-                    <input type="number" class="form-control mb-2 mr-sm-2" id="shares-{{ h['symbol'] }}" placeholder="Shares" name="shares" min="0" step="1">
+                    <input type="number" autocomplete="off" class="form-control mb-2 mr-sm-2" id="shares-{{ h['symbol'] }}" placeholder="Shares" name="shares" min="0" step="1">
 
                     <label class="sr-only" for="symbol-{{ h['symbol'] }}">Symbol</label>
                     <input type="hidden" class="form-control mb-2 mr-sm-2" name="symbol" value="{{ h['symbol'] }}" id="symbol-{{ h['symbol'] }}">
@@ -44,11 +44,11 @@ Home
             <td>Remaining Cash</td>
             <td></td>
             <td></td>
-            <td>{{ cash }}</td>
+            <td>{{ cash | usd }}</td>
             <td>
                 <form class="form-inline">
                     <label class="sr-only" for="cash">Amount</label>
-                    <input type="number" class="form-control mb-2 mr-sm-2" id="cash" placeholder="Cash" name="cash" min="0">
+                    <input type="number" autocomplete="off" class="form-control mb-2 mr-sm-2" id="cash" placeholder="Cash" name="cash" min="0">
 
                     <button type="submit" class="btn btn-primary mb-2 mr-2" formaction="/deposit" formmethod="post">Deposit</button>
                     <button type="submit" class="btn btn-secondary mb-2 mr-2" formaction="/withdraw" formmethod="post">Withdraw</button>

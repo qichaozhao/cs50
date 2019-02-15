@@ -56,7 +56,7 @@ def index():
         h['name'] = q['name']
         h['total'] = q['price'] * h['quantity']
 
-    return render_template('index.html', holdings=holdings, cash=round(usr[0]['cash'], 2))
+    return render_template('index.html', holdings=holdings, cash=usr[0]['cash'])
 
 
 @app.route("/deposit", methods=["POST"])
