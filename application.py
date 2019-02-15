@@ -98,10 +98,16 @@ def buy():
 
     elif request.method == "POST":
 
-        symbol = request.form.get("symbol", "")
-        shares = int(request.form.get("shares", "0"))
-
         # Validate the input
+        symbol = request.form.get("symbol", "")
+        try:
+            shares = int(request.form.get("shares", "0"))
+        except ValueError:
+            return apology("Shares is not a numeric value.")
+
+        if (shares - float(request.form.get("shares", "0"))) != 0:
+            return apology("Must provide integer share value only.")
+
         if shares <= 0:
             return apology("You're trying to buy an invalid number of stocks, what's wrong with you?")
 
@@ -136,9 +142,9 @@ def check():
     usrs = db.execute("SELECT * FROM users WHERE username = :uname", uname=uname)
 
     if len(uname) > 1 and len(usrs) == 0:
-        return jsonify({"status": "valid"}), 200
+        return jsonify(True), 200
     else:
-        return jsonify({"status": "invalid"}), 400
+        return jsonify(False), 200
 
 
 @app.route("/history")
@@ -267,7 +273,13 @@ def sell():
     elif request.method == "POST":
 
         symbol = request.form.get("symbol", "")
-        shares = int(request.form.get("shares", "0"))
+        try:
+            shares = int(request.form.get("shares", "0"))
+        except ValueError:
+            return apology("Shares is not a numeric value.")
+
+        if (shares - float(request.form.get("shares", "0"))) != 0:
+            return apology("Must provide integer share value only.")
 
         # Validate the input
         if shares <= 0:

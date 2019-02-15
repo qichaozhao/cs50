@@ -28,15 +28,15 @@
 
             // Call our check route
             $.get("/check", { username: uname })
-                .done(function(data)) {
+                .done(function(data) {
 
-                    if (data["status"] === "valid") {
+                    if (data === true) {
                         $("#username").addClass("is-valid")
                     } else {
                         $("#username").addClass("is-invalid")
                     }
 
-                }
+                });
         });
 
         // Form validation code
