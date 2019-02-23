@@ -1,6 +1,7 @@
 #include "../c_sorts/trivial_sorts.h"
 #include "helpers.h"
 #include <assert.h>
+#include <stdio.h>
 
 // Define function prototypes
 void test_insertion_sort(void);
@@ -69,7 +70,6 @@ void test_insertion_sort(void)
     {    
         insertion_sort(INPUTS[i], sizes[i]);
         assert(arraycmp(INPUTS[i], OUTPUTS[i], sizes[i]));
-
     }
 }
 
@@ -79,7 +79,6 @@ void test_selection_sort(void)
     {    
         selection_sort(INPUTS[i], sizes[i]);
         assert(arraycmp(INPUTS[i], OUTPUTS[i], sizes[i]));
-
     }
 }
 
@@ -89,7 +88,6 @@ void test_bubble_sort(void)
     {    
         selection_sort(INPUTS[i], sizes[i]);
         assert(arraycmp(INPUTS[i], OUTPUTS[i], sizes[i]));
-
     }
 }
 
