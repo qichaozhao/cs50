@@ -29,58 +29,70 @@ INT_OUTPUTS = [
 
 def test_insertion_sort():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
-        assert (insertion_sort(ipt) == opt)
+        assert (insertion_sort(ipt.copy()) == opt)
 
 
 def test_selection_sort():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
-        assert (selection_sort(ipt) == opt)
+        assert (selection_sort(ipt.copy()) == opt)
 
 
 def test_bubble_sort():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
-        assert (bubble_sort(ipt) == opt)
+        assert (bubble_sort(ipt.copy()) == opt)
 
 
 def test_merge_sort():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
-        assert (merge_sort(ipt) == opt)
+        assert (merge_sort(ipt.copy()) == opt)
 
 
 def test_merge_sort_nr():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
-        assert (merge_sort_nr(ipt) == opt)
+        assert (merge_sort_nr(ipt.copy()) == opt)
 
 
 def test_quick_sort():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
-        assert (quick_sort(ipt) == opt)
+        assert (quick_sort(ipt.copy()) == opt)
 
 
 def test_quick_sort_ip():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
-        assert (quick_sort_ip(ipt) == opt)
+        assert (quick_sort_ip(ipt.copy()) == opt)
 
 
 def test_bucket_sort():
     for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
         # Modify the inputs to make them into lists
         # Also remove negative inputs as bucket sort deals with positive integer keys only
-        if sum(i < 0 for i in ipt) > 0:
+        if sum(i < 0 for i in ipt.copy()) > 0:
             continue
 
-        subs_ipt = [[i] for i in ipt]
-        subs_opt = [[o] for o in opt]
+        subs_ipt = [[i, i] for i in ipt.copy()]
+        subs_opt = [[o, o] for o in opt]
         assert (bucket_sort(subs_ipt, len(subs_ipt)) == subs_opt)
+
+    for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
+        if sum(i < 0 for i in ipt.copy()) > 0:
+            continue
+
+        assert (bucket_sort(ipt.copy(), len(ipt)) == opt)
 
 
 def test_radix_sort():
     for ipt, opt in zip(INT_OUTPUTS, INT_OUTPUTS):
         # Modify the inputs to make them into lists
         # Also remove negative inputs as radix sort relies on bucket sort which works for +ve integer keys only
-        if sum(i < 0 for i in ipt) > 0:
+        if sum(i < 0 for i in ipt.copy()) > 0:
             continue
 
-        subs_ipt = [[i] for i in ipt]
-        subs_opt = [[o] for o in opt]
-        assert (bucket_sort(subs_ipt, len(subs_ipt)) == subs_opt)
+        subs_ipt = [[i, i] for i in ipt.copy()]
+        subs_opt = [[o, o] for o in opt]
+        assert (radix_sort(subs_ipt.copy()) == subs_opt)
+
+    for ipt, opt in zip(INT_INPUTS, INT_OUTPUTS):
+        if sum(i < 0 for i in ipt.copy()) > 0:
+            continue
+
+        assert (radix_sort(ipt.copy()) == opt)

@@ -26,4 +26,21 @@ int main(void)
     printf("Size2: %i\n", size2);
     printf("First element: %i\n", INPUTS[1][0]);
 
+    // 2d Array
+    int arr2d[5][5];
+    int *arr;
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            arr2d[i][j] = i * j;
+        }
+    }
+
+    arr = arr2d[0];
+
+    for (int i = 0; i < 5; i++)
+    {
+        printf("%i ", arr[i]);
+    }
 }

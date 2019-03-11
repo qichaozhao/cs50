@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block title %}
+Comparison Results
+{% endblock %}
+{% block main %}
+<div class="row">
+    <div class="col text-left">
+
+        <h1>Sorting Algorithm Comparison Results</h1>
+        <h3>Python Sorts Chosen</h3>
+
+        <ul>
+            {% for ps in py_selected %}
+            <li>{{ ps }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col text-left">
+        <h3>C Sorts Chosen</h3>
+        <ul>
+            {% for cs in c_selected %}
+            <li>{{ cs }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div id="results_chart" style="width:100%; height:400px;"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    var myChart = Highcharts.chart('results_chart', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Sorting Time Consumption'
+        },
+        xAxis: {
+            title: {
+                text: 'Size of Array'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Seconds (s)'
+            }
+        },
+        legend: {
+            enabled: true
+        },
+        series: JSON.parse({{ res|tojson|safe }}),
+        plotOptions: {
+            series: {
+                marker: {
+                    enabled: true
+                }
+        }
+    },
+    });
+});
+</script>
+{% endblock %}

@@ -1,13 +1,11 @@
-#include "../c_sorts/trivial_sorts.h"
+#include "../c_sorts/radix_sort.h"
 #include "helpers.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
 // Define function prototypes
-void test_insertion_sort(void);
-void test_bubble_sort(void);
-void test_selection_sort(void);
+void test_radix_sort(void);
 void test_init(void);
 int *array_copy(int *src, size_t size);
 
@@ -32,11 +30,8 @@ int sizes[5] = {1, 11, 101, 101, 152};
 int main(void)
 {
     test_init();
-    test_selection_sort();
-    test_insertion_sort();
-    test_bubble_sort();
+    test_radix_sort();
 }
-
 
 // Generate the arrays for TC3, TC4, TC5
 void test_init(void)
@@ -50,10 +45,10 @@ void test_init(void)
     shuffle(TC3, 101);
 
     // TC4
-    for (int i = 0; i > -101; i--)
+    for (int i = 0; i < 101; i++)
     {
-        TC4[abs(i)] = i;
-        TC4O[abs(i)] = -100 + abs(i);
+        TC4[i] = i;
+        TC4O[i] = i;
     }
     shuffle(TC4, 101);
 
@@ -67,31 +62,24 @@ void test_init(void)
 
 }
 
-void test_insertion_sort(void)
+void test_radix_sort(void)
 {
     for (int i = 0; i < 5; i++)
-    {    
-        int *out = insertion_sort(array_copy(INPUTS[i], sizes[i]), sizes[i]);
-        assert(arraycmp(out, OUTPUTS[i], sizes[i]));
-        free(out);
-    }
-}
+    {   
+        // for (int j = 0; j < sizes[i]; j++)
+        // {
+        //     printf("%i ", INPUTS[i][j]);
+        // }
+        // printf("\n");
 
-void test_selection_sort(void)
-{
-    for (int i = 0; i < 5; i++)
-    {    
-        int *out = selection_sort(array_copy(INPUTS[i], sizes[i]), sizes[i]);
-        assert(arraycmp(out, OUTPUTS[i], sizes[i]));
-        free(out);
-    }
-}
+        int *out = radix_sort(array_copy(INPUTS[i], sizes[i]), sizes[i]);
 
-void test_bubble_sort(void)
-{
-    for (int i = 0; i < 5; i++)
-    {    
-        int *out = selection_sort(array_copy(INPUTS[i], sizes[i]), sizes[i]);
+        // for (int j = 0; j < sizes[i]; j++)
+        // {
+        //     printf("%i ", out[j]);
+        // }
+        // printf("\n");
+
         assert(arraycmp(out, OUTPUTS[i], sizes[i]));
         free(out);
     }

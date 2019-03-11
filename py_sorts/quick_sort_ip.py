@@ -43,8 +43,8 @@ def quick_sort_ip_rec(arr, a, b):
     arr[p], arr[l] = arr[l], arr[p]
 
     # Now we can recurse
-    quick_sort_ip_rec(arr, a, p - 1)
-    quick_sort_ip_rec(arr, p + 1, b)
+    quick_sort_ip_rec(arr, a, l - 1)
+    quick_sort_ip_rec(arr, l + 1, b)
 
 def quick_sort_ip(arr):
     """

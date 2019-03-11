@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}
+Run One Results
+{% endblock %}
+{% block main %}
+<div class="row">
+    <div class="col text-left">
+
+        <h1>Sorting Algorithm Results</h1>
+        <h3>Sort Chosen</h3>
+
+        <ul>
+            <li>Language: {{ algo_type }}</li>
+            <li>Algorithm: {{ algo_name }}</li>
+            <li>Input Array (first 25 elements): {{ input_arr }}</li>
+            <li>Sorted Array (first 25 elements): {{ sorted_arr }}</li>
+            <li>Time Elapsed (s): {{ time_elapsed }}</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-def bucket_sort(kv_arr, n_buckets):
+def bucket_sort(kv_arr, n_buckets=None):
     """
     If we have a sequence of (key, value1, value2, ...) tuples where keys are integers in a known range,
     we have a faster algorithm we can use.
@@ -11,12 +11,21 @@ def bucket_sort(kv_arr, n_buckets):
     :return:
     """
 
+    if len(kv_arr) == 0:
+        return kv_arr
+
+    if n_buckets is None:
+        n_buckets = max(kv_arr) + 1
+
     # Instantiate our buckets
     buckets = [[] for i in range(n_buckets)]
 
     # Build the buckets
     for kv in kv_arr:
-        buckets[kv[0]].append(kv)
+        if isinstance(kv, (list, tuple)):
+            buckets[kv[0]].append(kv)
+        else:
+            buckets[kv].append(kv)
 
     idx = 0
     for bucket in buckets:
@@ -25,9 +34,3 @@ def bucket_sort(kv_arr, n_buckets):
             idx += 1
 
     return kv_arr
-
-
-
-
-
-

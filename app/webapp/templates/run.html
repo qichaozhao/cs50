@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block title %}
+Run One
+{% endblock %}
+{% block main %}
+<div class="row">
+    <div class="col text-left">
+        <h1>Run Sorting Algorithm</h1>
+        <p>Run a sorting algorithm of your choosing on an input of your choosing!</p>
+    </div>
+
+</div>
+<form action="/run" method="post" class="text-left">
+
+    <div class="form-group row">
+        <div class="col-12">
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" id="algo_type_1" name="algo_type" value="c">
+                <label class="form-check-label" for="algo_type_1">C</label>
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="radio" id="algo_type_2" name="algo_type" value="python">
+                <label class="form-check-label" for="algo_type_2">Python</label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row" id="py_algs">
+        <div class="col-12">
+            <label for="py_sort_select" class="col-form-label col-md-4">Python Algorithms</label>
+            <select class="form-control col-md-8" id="py_sort_select" name="py_sort_select">
+                {% for ps in py_sorts_avail %}
+                <option value="{{ ps[0] }}">{{ ps[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row" id="c_algs">
+        <div class="col-12">
+            <label for="py_sort_select" class="col-form-label col-md-4">C Algorithms</label>
+            <select class="form-control col-md-8" id="c_sort_select" name="c_sort_select">
+                {% for cs in c_sorts_avail %}
+                <option value="{{ cs[0] }}">{{ cs[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-12">
+            <label for="input_arr">Input Array (comma separated integers)</label>
+            <input type="text" class="form-control" id="input_arr" name="input_arr"
+                   placeholder="CSV input array">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col">
+            <button class="btn btn-primary" type="submit">Compare</button>
+        </div>
+    </div>
+</form>
+<script>
+
+$(document)
+    .ready(function() {
+
+            $('#py_algs').hide();
+            $('#c_algs').hide();
+
+            $('#algo_type_1').on('click', function() {
+                $('#py_algs').hide();
+                $('#c_algs').show();
+            });
+            $('#algo_type_2').on('click', function() {
+                $('#py_algs').show();
+                $('#c_algs').hide();
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}

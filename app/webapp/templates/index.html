@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %}
+Home
+{% endblock %}
+{% block main %}
+<div class="row">
+    <h1>Sorting Algorithm Comparison</h1>
+
+    <p class="text-left">Choose an array of sorting algorithms to run and compare their performances!</p>
+    <p class="text-left">Runs will be conducted on arrays of random variables of sizes from 5000 to 50000 in steps of 5000.</p>
+    <p class="text-left">The results will be charted to showcase the differences between algorithms and also the
+        differences between C implementations and Python implementations of the same algorithm.</p>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <form action="/compare" method="post">
+
+            <div class="form-group row">
+                <label for="py_sort_select" class="col-form-label col-md-4">Python Algorithms</label>
+                <select multiple class="form-control col-md-8" id="py_sort_select" name="py_sort_select">
+                    {% for ps in py_sorts_avail %}
+                    <option value="{{ ps[0] }}">{{ ps[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group row">
+                <label for="py_sort_select" class="col-form-label col-md-4">C Algorithms</label>
+                <select multiple class="form-control col-md-8" id="c_sort_select" name="c_sort_select">
+                    {% for cs in c_sorts_avail %}
+                    <option value="{{ cs[0] }}">{{ cs[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group row">
+                <div class="col">
+                    <button class="btn btn-primary" type="submit">Compare</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

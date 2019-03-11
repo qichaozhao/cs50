@@ -31,8 +31,13 @@ def quick_sort(arr):
         else:
             G.append(v)
 
-    quick_sort(L)
-    quick_sort(G)
+    # Make sure to choose the smaller side to avoid hitting stack overflows
+    if len(L) < len(G):
+        quick_sort(L)
+        quick_sort(G)
+    else:
+        quick_sort(G)
+        quick_sort(L)
 
     # Concatenate the results using slice assignment
     arr[:len(L)] = L

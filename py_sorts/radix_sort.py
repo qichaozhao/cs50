@@ -1,8 +1,19 @@
+from functools import reduce
+from operator import iconcat
+
+
 def radix_sort(kv_arr):
     """
     Radix sort starting from the least significant bit. Will return a sorted list as expected (0, 1, 2, 10, 20)
     :return:
     """
+
+    if len(kv_arr) == 0:
+        return kv_arr
+
+    # Array-ify kv_arr if needed
+    if not isinstance((kv_arr[0]), (list, tuple)):
+        kv_arr = [[kv] for kv in kv_arr]
 
     # First explode the key into tuples
     key_digits = _explode_key_seq(kv_arr)
@@ -13,6 +24,10 @@ def radix_sort(kv_arr):
 
     # Now we need to compact the key sequence
     _compact_key_seq(kv_arr)
+
+    # Compact kv_arr if needed
+    if len(kv_arr[0]) == 1:
+        kv_arr = reduce(iconcat, kv_arr, [])
 
     return kv_arr
 
